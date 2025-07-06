@@ -1,4 +1,3 @@
-
 /// # Module: Std_Types
 ///
 /// This module defines standard types used in the AUTOSAR Classic Platform base software.
@@ -31,9 +30,10 @@
     /// This enum represents the standard return type used in AUTOSAR.
     /// It defines two possible return values: `Ok` and `NotOk`.
     /// SWS REQUIREMENT " SWS_Std_00005"
+    #[derive(Debug, PartialEq)]
     pub enum StdReturnType {
         Ok,
-        NotOk
+        NotOk,
     }
     /// defining constant of StdReturnType
     /// This struct provides constants for the standard return type.
