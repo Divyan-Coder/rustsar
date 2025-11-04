@@ -38,11 +38,22 @@
     /// defining constant of StdReturnType
     /// This struct provides constants for the standard return type.
     /// It includes `E_OK` for successful operations and `E_NOT_OK` for failed operations.
-    /// SWS REQUIREMENT " SWS_Std_00005"
+    /// SWS REQUIREMENT " SWS_Std_00005, SWS_Csm_91043"
     impl StdReturnType {
         // Associated constants
         pub const E_OK: u8 = 0;
         pub const E_NOT_OK: u8 = 1;
+        
+        pub const CRYPTO_E_BUSY: u8 = 2;
+        pub const CRYPTO_E_ENTROPY_EXHAUSTED: u8 = 4;
+        pub const CRYPTO_E_KEY_READ_FAILURE: u8 = 6;
+        pub const CRYPTO_E_KEY_READ_FAIL : u8 = 7;
+        pub const CRYPTO_E_KEY_NOT_AVAILABLE: u8 = 8;
+        pub const CRYPTO_E_KEY_NOT_VALID: u8 = 9;
+        pub const CRYPTO_E_KEY_SIZE_MISMATCH: u8 = 0xA;
+        pub const CRYPTO_E_JOB_CANCELED: u8 = 0xC;
+        pub const CRYPTO_E_KEY_EMPTY: u8 = 0xD;
+        pub const CRYPTO_E_CUSTOM_ERROR: u8 = 0x0E;
     }
 
     /// Standard Version Information Type
