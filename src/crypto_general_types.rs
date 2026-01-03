@@ -19,7 +19,7 @@
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
-pub enum Crypto_AlgorithmFamilyType {
+pub enum CryptoAlgorithmFamilyType {
     CryptoAlgoFamNotSet = 0,
     CryptoAlgofamSha1           = 0x01 , //SHA1 hash
     CryptoAlgofamSha2_224     = 0x02 , //SHA2-224 hash
@@ -71,7 +71,7 @@ pub enum Crypto_AlgorithmFamilyType {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
-pub enum Crypto_AlgorithmModeType {
+pub enum CryptoAlgorithmModeType {
     CryptoAlgoModeNotSet = 0,
     CryptoAlgomodeEcb = 0x01 , //Blockmode: Electronic Codebook
     CryptoAlgomodeCbc = 0x02  , //Blockmode: Cipher Block Chaining
@@ -101,7 +101,7 @@ pub enum Crypto_AlgorithmModeType {
 /// different logical channels)
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
-pub enum Crypto_InputOutputRedirectionConfigType {
+pub enum CryptoInputOutputRedirectionConfigType {
     PrimaryInput = 0,
     SecondaryInput = 1,
     TertiaryInput = 2,
@@ -112,7 +112,7 @@ pub enum Crypto_InputOutputRedirectionConfigType {
 /// Job state for the Crypto Service Manager
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
-pub enum Crypto_JobStateType {
+pub enum CryptoJobStateType {
     Idle = 0,
     Active = 1,
 }
@@ -120,13 +120,13 @@ pub enum Crypto_JobStateType {
 /// Result of a verification operation
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
-pub enum Crypto_VerifyResultType {
+pub enum CryptoVerifyResultType {
     Unknown = 0,
     Verified = 1,
     NotVerified = 2,
 }
 
-pub enum Crypto_ServiceInfoType{
+pub enum CryptoServiceInfoType{
     Hash = 0,
     MacGenerate = 1,
     CryptoMacverify = 0x02 , //MacVerify Service
@@ -147,13 +147,29 @@ pub enum Crypto_ServiceInfoType{
     CryptoCustomService = 0x15 , //Custom service job
 }
 
+/// Status of a key stored in the CryptoIf/key manager
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub enum CryptoKeyStatusType {
+    CryptoKeyStatusInvalid = 0,
+    CryptoKeyStatusValid = 1,
+}
+
+/// Generic result type used for notifications/callbacks
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub enum CryptoResultType {
+    CryptoResultOk = 0,
+    CryptoResultFailed = 1,
+}
+
 #[derive(Debug, Clone)]
-pub enum Crypto_ProcessingType {
+pub enum CryptoProcessingType {
     Sync = 0,
     Async = 1,
 }
 
-pub enum Crypto_OperationModeType {
+pub enum CryptoOperationModeType {
     OperationStart =1,
     OperationUpdate =2,
     OperationStreamstart =3,
@@ -162,9 +178,9 @@ pub enum Crypto_OperationModeType {
     OperationmodeSaveContext =8,
     OperationmodeRestoreContext =9,
 }
-pub struct Crypto_PrimitiveInfoType{
-    service : Crypto_ServiceInfoType,
-    algorithm : Crypto_AlgorithmInfoType,
+pub struct CryptoPrimitiveInfoType{
+    service : CryptoServiceInfoType,
+    algorithm : CryptoAlgorithmInfoType,
 }
 
 /// Primitive information for a job (algorithm identifiers and parameters).
@@ -172,17 +188,17 @@ pub struct Crypto_PrimitiveInfoType{
 /// extended later.
 #[derive(Debug, Clone)]
 #[repr(C)]
-pub struct Crypto_JobPrimitiveInfoType {
+pub struct CryptoJobPrimitiveInfoType {
     callback_id: u32,
-    primitive_info : Option<*mut Crypto_PrimitiveInfoType>,
+    primitive_info : Option<*mut CryptoPrimitiveInfoType>,
     cry_if_key_id: u32,
-    processing_type : Crypto_ProcessingType,
+    processing_type : CryptoProcessingType,
 }
 
 /// Redirection descriptor used to route inputs/outputs to different buffers
 #[derive(Debug, Clone)]
 #[repr(C)]
-pub struct Crypto_JobRedirectionInfoType {
+pub struct CryptoJobRedirectionInfoType {
     pub redirect_config: u8,
     input_key_id : u32,
     input_key_element_id : u32,
@@ -201,7 +217,7 @@ pub struct Crypto_JobRedirectionInfoType {
 /// APIs.
 #[derive(Debug, Clone)]
 #[repr(C)]
-pub struct Crypto_JobPrimitiveInputOutputType {
+pub struct CryptoJobPrimitiveInputOutputType {
     pub input_ptr: Option<*const u8>,
     pub input_length: u32,
     pub secondary_input_ptr: Option<*const u8>,
@@ -213,8 +229,8 @@ pub struct Crypto_JobPrimitiveInputOutputType {
     pub output_length_ptr: Option<*mut u32>,
     pub secondary_output_ptr: Option<*mut u8>,
     pub secondary_output_length_ptr: Option<*mut u32>,
-    pub verify_ptr: Option<*mut Crypto_VerifyResultType>,
-    mode : Option<*mut Crypto_OperationModeType>,
+    pub verify_ptr: Option<*mut CryptoVerifyResultType>,
+    mode : Option<*mut CryptoOperationModeType>,
     cry_if_key_id: u32,
     target_cry_if_key_id: u32,
 }
@@ -222,21 +238,21 @@ pub struct Crypto_JobPrimitiveInputOutputType {
 /// Top-level job descriptor used by the Crypto Service Manager
 #[derive(Debug, Clone)]
 #[repr(C)]
-pub struct Crypto_JobType {
+pub struct CryptoJobType {
     pub job_id: u32,
-    pub job_state: Crypto_JobStateType,
-    pub job_primitive_input_output: Crypto_JobPrimitiveInputOutputType,
-    pub job_primitive_info: Crypto_JobPrimitiveInfoType,
+    pub job_state: CryptoJobStateType,
+    pub job_primitive_input_output: CryptoJobPrimitiveInputOutputType,
+    pub job_primitive_info: CryptoJobPrimitiveInfoType,
     /// Optional reference to redirection information (may be None)
-    pub job_redirection_info_ref: Option<*const Crypto_JobRedirectionInfoType>,
+    pub job_redirection_info_ref: Option<*const CryptoJobRedirectionInfoType>,
     pub crypto_key_id: u32,
     pub target_crypto_key_id: u32,
     pub job_priority: u32,
 }
 
-pub struct Crypto_AlgorithmInfoType{
-    family: Crypto_AlgorithmFamilyType,
-    secondary_family: Crypto_AlgorithmFamilyType,
+pub struct CryptoAlgorithmInfoType{
+    family: CryptoAlgorithmFamilyType,
+    secondary_family: CryptoAlgorithmFamilyType,
     key_length: u32,
-    mode : Crypto_AlgorithmModeType,
+    mode : CryptoAlgorithmModeType,
 }
